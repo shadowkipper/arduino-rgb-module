@@ -1,18 +1,38 @@
-const int touchPin = 2; 
-int touchState = 0; 
+const int redPin = 2;
+const int yellowPin = 3;
+const int greenPin = 4;
 
 void setup() {
-  pinMode(touchPin, INPUT); 
   Serial.begin(9600);
+  pinMode(redPin, OUTPUT);
+  pinMode(yellowPin, OUTPUT);
+  pinMode(greenPin, OUTPUT);
 }
 
 void loop() {
-  touchState = digitalRead(touchPin);
-
-  if (touchState == HIGH) {
-    Serial.println("1");
-  } else {
-    Serial.println("0");
+  if (Serial.available() > 0) {
+    String color = Serial.readStringUntil('\n');
+    color.trim();
+    setColor(color);
   }
+}
 
-  delay(500);
+void setColor(String color) {
+  if (color == "red") {
+    digitalWrite(redPin, HIGH);
+    digitalWrite(yellowPin, LOW);
+    digitalWrite(greenPin, LOW);
+  } else if (color == "yellow") {
+    digitalWrite(redPin, LOW);
+    digitalWrite(yellowPin, HIGH);
+    digitalWrite(greenPin, LOW);
+  } else if (color == "green") {
+    digitalWrite(redPin, LOW);
+    digitalWrite(yellowPin, LOW);
+    digitalWrite(greenPin, HIGH);
+  } else {
+    digitalWrite(redPin, LOW);
+    digitalWrite(yellowPin, LOW);
+    digitalWrite(greenPin, LOW);
+  }
+}
